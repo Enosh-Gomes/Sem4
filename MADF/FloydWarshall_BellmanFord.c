@@ -21,8 +21,8 @@ void AllPaths(int cost[MAX][MAX],int A[MAX][MAX],int n){
     }
     printf("\n");
     
-    for(k=1;k<n;k++){
-        printf("A %d = \t\t\t\t P %d =\n",k,k);
+    for(k=0;k<n;k++){
+        printf("A %d = \t\t\t\t P %d =\n",k+1,k+1);
         for(i=0;i<n;i++){
             printf("    ");
             for(j=0;j<n;j++){
@@ -55,11 +55,11 @@ void BellmanFord(int v,int costy[][MAX],int dist[],int no){
             printf("%2d |",dist[i]);
     }
     printf("\n");
-    
+
     for(k=1;k<no-1;k++){
         printf("dist [%d] |",k+1);
         for(u=0;u<no;u++){
-            //if(u!=v && costy[v][u]!=inf){
+            if(u!=v && costy[v][u]!=inf){
                 //printf("dist %d [%d] |",k,u);
                 for(i=0;i<no;i++){
                     if(costy[i][u] != inf && dist[i] != inf && dist[u]>dist[i]+costy[i][u]){
@@ -71,7 +71,7 @@ void BellmanFord(int v,int costy[][MAX],int dist[],int no){
                     printf("%3s|", "inf");
                 else
                     printf("%2d |",dist[u]);
-            //}
+            }
         }
         printf("\n");
     }
