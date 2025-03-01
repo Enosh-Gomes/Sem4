@@ -55,7 +55,7 @@ void BellmanFord(int v,int costy[][MAX],int dist[],int no){
             printf("%2d |",dist[i]);
     }
     printf("\n");
-
+    
     for(k=1;k<no-1;k++){
         printf("dist [%d] |",k+1);
         for(u=0;u<no;u++){
