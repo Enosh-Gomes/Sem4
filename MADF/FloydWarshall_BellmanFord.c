@@ -5,8 +5,9 @@
 
 void AllPaths(int cost[MAX][MAX],int A[MAX][MAX],int n){
     int i,j,k;
+    int P[n][n];
 
-    printf("A 0 = \t\t\t\t P 0 =\n");
+    printf("A 0 =  \t\t\t\t  P 0 =\n");
     for(i=0;i<n;i++){
         printf("    ");
         for(j=0;j<n;j++){
@@ -16,7 +17,18 @@ void AllPaths(int cost[MAX][MAX],int A[MAX][MAX],int n){
                 printf("%4s ", "inf");
             else
                 printf("%4d ", A[i][j]);
+            
+            P[i][j]=i+1;
+            if(i==j){                
+                P[i][j]=0;
+            }
         }
+
+        printf("         ");
+        for(j=0;j<n;j++){
+            printf("%4d ", P[i][j]);
+        }
+
         printf("\n");
     }
     printf("\n");
@@ -28,12 +40,19 @@ void AllPaths(int cost[MAX][MAX],int A[MAX][MAX],int n){
             for(j=0;j<n;j++){
                 if(A[i][k] != inf && A[k][j] != inf && A[i][j]>A[i][k]+A[k][j]){
                     A[i][j]=A[i][k]+A[k][j];
+                    P[i][j]=P[k][j];
                 }
                 if(A[i][j] == inf)
                     printf("%4s ", "inf");
                 else
                     printf("%4d ", A[i][j]);
             }
+            
+            printf("         ");
+            for(j=0;j<n;j++){
+                printf("%4d ", P[i][j]);
+            }
+
             printf("\n");
         }
         printf("\n\n");
@@ -59,7 +78,7 @@ void BellmanFord(int v,int costy[][MAX],int dist[],int no){
     for(k=1;k<no-1;k++){
         printf("dist [%d] |",k+1);
         for(u=0;u<no;u++){
-            if(u!=v && costy[v][u]!=inf){
+            //if(u!=v && costy[v][u]!=inf){
                 //printf("dist %d [%d] |",k,u);
                 for(i=0;i<no;i++){
                     if(costy[i][u] != inf && dist[i] != inf && dist[u]>dist[i]+costy[i][u]){
@@ -71,7 +90,7 @@ void BellmanFord(int v,int costy[][MAX],int dist[],int no){
                     printf("%3s|", "inf");
                 else
                     printf("%2d |",dist[u]);
-            }
+            //}
         }
         printf("\n");
     }
