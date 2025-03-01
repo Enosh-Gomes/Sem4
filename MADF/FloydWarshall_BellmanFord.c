@@ -56,14 +56,18 @@ void AllPaths(int cost[MAX][MAX],int A[MAX][MAX],int n){
             printf("\n");
         }
         printf("\n\n");
+
+        printf("Source Destin Length Path\n");
     }
 }
 
 void BellmanFord(int v,int costy[][MAX],int dist[],int no){
     int i,k,u;
+    int P[no];
 
     for(i=0;i<no;i++){
         dist[i]=costy[v][i];
+        P[i]=v;
     }
     printf("  u / i  | 1 | 2 | 3 | 4 | 5 | 6 | 7 |\n");
     printf("dist [1] |");
@@ -83,6 +87,7 @@ void BellmanFord(int v,int costy[][MAX],int dist[],int no){
                 for(i=0;i<no;i++){
                     if(costy[i][u] != inf && dist[i] != inf && dist[u]>dist[i]+costy[i][u]){
                         dist[u]=dist[i]+costy[i][u];
+                        P[u]=i;
                     }
                 }
                 
@@ -94,7 +99,12 @@ void BellmanFord(int v,int costy[][MAX],int dist[],int no){
         }
         printf("\n");
     }
+    /*for(i=0;i<no;i++){
+        printf("%d ",P[i]+1);  For backtracking the shortest path
+    }*/
     printf("\n\n");
+
+    printf("Source Destin Length Path\n");
 }
 
 int main(){
