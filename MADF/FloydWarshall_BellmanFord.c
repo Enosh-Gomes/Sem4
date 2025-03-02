@@ -3,6 +3,20 @@
 #define MAX 10
 #define inf INT_MAX
 
+void printPaths(int P[MAX][MAX], int i, int j) {
+    if (i == j) {
+        printf("%d", i + 1); // Convert to 1-based index for display
+        return;
+    }
+    /*if (P[i][j] == 0) {
+        //printf("No path from %d to %d\n", i + 1, j + 1);
+        return;
+    }*/
+    printPaths(P, i, P[i][j] - 1); // Convert 1-based to 0-based index
+    printf("->%d", j + 1);
+}
+
+
 void AllPaths(int cost[MAX][MAX],int A[MAX][MAX],int n){
     int i,j,k;
     int P[n][n];
@@ -56,10 +70,33 @@ void AllPaths(int cost[MAX][MAX],int A[MAX][MAX],int n){
             printf("\n");
         }
         printf("\n\n");
-
-        printf("Source Destin Length Path\n");
     }
+    printf("Source Destin Length Path\n");
+        for(i=0;i<n;i++){
+            for(j=0;j<n;j++){
+                if(i!=j){
+                    printf("%d      %d     %d     ",i+1,j+1,A[i][j]);
+                    printPaths(P,i,j);
+                    printf("\n");
+                }
+            }
+        }
 }
+
+
+void printPath(int P[], int v, int j) {
+    if (v == j) {
+        printf("%d", v + 1);
+        return;
+    }
+    /*if (P[j] == -1) {
+        printf("No path from %d to %d\n", v + 1, j + 1);
+        return;
+    }*/
+    printPath(P, v, P[j]);
+    printf("->%d", j + 1);
+}
+
 
 void BellmanFord(int v,int costy[][MAX],int dist[],int no){
     int i,k,u;
@@ -105,6 +142,13 @@ void BellmanFord(int v,int costy[][MAX],int dist[],int no){
     printf("\n\n");
 
     printf("Source Destin Length Path\n");
+    for(i=0;i<no;i++){
+        if(i!=v){
+            printf("%d      %d     %d     ",v+1,i+1,dist[i]);
+            printPath(P,v,i);
+            printf("\n");
+        }
+    }
 }
 
 int main(){
