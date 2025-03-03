@@ -16,7 +16,6 @@ void printPaths(int P[MAX][MAX], int i, int j) {
     printf("->%d", j + 1);
 }
 
-
 void AllPaths(int cost[MAX][MAX],int A[MAX][MAX],int n){
     int i,j,k;
     int P[n][n];
