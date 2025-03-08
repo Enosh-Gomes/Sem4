@@ -96,6 +96,7 @@ void printPath(int P[], int v, int j) {
     printf("->%d", j + 1);
 }
 
+//Error in table of dist[]
 void BellmanFord(int v,int costy[][MAX],int dist[],int no){
     int i,k,u;
     int P[no];
