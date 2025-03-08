@@ -51,7 +51,7 @@ int del(){
         front = front + 1;
     return item;
 }
-
+//is peek() required or a waste of code and memory ?
 
 
 
@@ -137,18 +137,18 @@ void printPath(int P[], int v, int j) {
     printf("->%d", j);
 }
 
-void BellmanFord(int v, int costy[MAX][MAX], int dist[], int no) {
+void BellmanFord(int v, int cost[MAX][MAX], int dist[], int n) {
     int i, k, u;
     int P[MAX];
 
-    for (i = 1; i <= no; i++) {
-        dist[i] = costy[v][i];
+    for (i = 1; i <= n; i++) {
+        dist[i] = cost[v][i];
         P[i] = /*(dist[i] == inf) ? -1 :*/ v;
     }
 
     printf("  u / i  | 1 | 2 | 3 | 4 | 5 | 6 | 7 |\n");
     printf("dist [1] |");
-    for (i = 1; i <= no; i++) {
+    for (i = 1; i <= n; i++) {
         if (dist[i] == inf)
             printf("%3s|", "inf");
         else
@@ -156,12 +156,12 @@ void BellmanFord(int v, int costy[MAX][MAX], int dist[], int no) {
     }
     printf("\n");
 
-    for (k = 1; k < no - 1; k++) {
+    for (k = 1; k < n - 1; k++) {
         printf("dist [%d] |", k + 1);
-        for (u = 1; u <= no; u++) {
-            for (i = 1; i <= no; i++) {
-                if (costy[i][u] != inf && dist[i] != inf && dist[u] > dist[i] + costy[i][u]) {
-                    dist[u] = dist[i] + costy[i][u];
+        for (u = 1; u <= n; u++) {
+            for (i = 1; i <= n; i++) {
+                if (cost[i][u] != inf && dist[i] != inf && dist[u] > dist[i] + cost[i][u]) {
+                    dist[u] = dist[i] + cost[i][u];
                     P[u] = i;
 
                     insert(u);    insert(i);
@@ -184,7 +184,7 @@ void BellmanFord(int v, int costy[MAX][MAX], int dist[], int no) {
     printf("\n\n");
 
     printf("Source Destin Length Path\n");
-    for (i = 1; i <= no; i++) {
+    for (i = 1; i <= n; i++) {
         if (i != v) {
             printf("  %2d     %2d     %2d     ", v, i, dist[i]);
             printPath(P, v, i);
@@ -196,20 +196,16 @@ void BellmanFord(int v, int costy[MAX][MAX], int dist[], int no) {
 int main() {
     int i,j;
 
-    int n = 5;
-    int cost[MAX][MAX], A[MAX][MAX];
+    int n = 5, cost[MAX][MAX], A[MAX][MAX];
     
     for (i = 1; i <= n; i++) {
         for (j = 1; j <= n; j++) {
             
-            A[i][j] = (i == j) ? 0 : inf;
             cost[i][j] = (i == j) ? 0 : inf;
 
             /*cost[i][j] = inf;
-            A[i][j] = inf;
             if (i == j) {
                 cost[i][j] = 0;
-                A[i][j] = 0;
             }*/
         }
     }
@@ -231,50 +227,47 @@ int main() {
 
     AllPaths(cost, A, n);
 
-    int v = 1, no = 7;
-    int costy[MAX][MAX], dist[MAX];
+    int v = 1, dist[MAX];
+    n = 7;
 
-    for (int i = 1; i <= no; i++) {
+    for (i = 1; i <= n; i++) {
         dist[i] = inf;
-        for (int j = 1; j <= no; j++) {
-            costy[i][j] = inf;
+        for (j = 1; j <= n; j++) {
+            cost[i][j] = inf;
             if (i == j) {
-                costy[i][j] = 0;
+                cost[i][j] = 0;
                 dist[i] = 0;
             }
         }
     }
 
-    //j = 2*no;
-    //int cqueue_arr[j];
-
-    costy[1][2] = 6;
-    costy[1][3] = 5;
-    costy[1][4] = 5;
-    costy[2][3] = 3;
-    costy[2][5] = -1;
-    costy[2][6] = 2;
-    costy[2][7] = 3;
-    costy[3][1] = 16;
-    costy[3][2] = -2;
-    costy[3][5] = 1;
-    costy[4][1] = -2;
-    costy[4][2] = 3;
-    costy[4][3] = -2;
-    costy[4][6] = -1;
-    costy[5][1] = 1;
-    costy[5][2] = 2;
-    costy[5][6] = 5;
-    costy[5][7] = 3;
-    costy[6][1] = 4;
-    costy[6][2] = 1;
-    costy[6][7] = 3;
-    costy[7][1] = -2;
-    costy[7][2] = -1;
-    costy[7][3] = 3;
-    costy[7][6] = -2;
+    cost[1][2] = 6;
+    cost[1][3] = 5;
+    cost[1][4] = 5;
+    cost[2][3] = 3;
+    cost[2][5] = -1;
+    cost[2][6] = 2;
+    cost[2][7] = 3;
+    cost[3][1] = 16;
+    cost[3][2] = -2;
+    cost[3][5] = 1;
+    cost[4][1] = -2;
+    cost[4][2] = 3;
+    cost[4][3] = -2;
+    cost[4][6] = -1;
+    cost[5][1] = 1;
+    cost[5][2] = 2;
+    cost[5][6] = 5;
+    cost[5][7] = 3;
+    cost[6][1] = 4;
+    cost[6][2] = 1;
+    cost[6][7] = 3;
+    cost[7][1] = -2;
+    cost[7][2] = -1;
+    cost[7][3] = 3;
+    cost[7][6] = -2;
     
-    BellmanFord(v, costy, dist, no);
+    BellmanFord(v, cost, dist, n);
 
     return 0;
 }
