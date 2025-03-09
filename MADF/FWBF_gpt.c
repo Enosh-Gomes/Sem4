@@ -236,7 +236,6 @@ int main() {
             cost[i][j] = inf;
             if (i == j) {
                 cost[i][j] = 0;
-                dist[i] = 0;
             }
         }
     }
