@@ -28,12 +28,10 @@ void AllPaths(int cost[MAX][MAX], int A[MAX][MAX], int n) {
 
             P[i][j] = (i == j) ? 0 : i;
         }
-
         printf("         ");
         for (j = 1; j <= n; j++) {
             printf("%4d ", P[i][j]);
         }
-
         printf("\n");
     }
     printf("\n");
@@ -52,12 +50,10 @@ void AllPaths(int cost[MAX][MAX], int A[MAX][MAX], int n) {
                 else
                     printf("%4d ", A[i][j]);
             }
-
             printf("         ");
             for (j = 1; j <= n; j++) {
                 printf("%4d ", P[i][j]);
             }
-
             printf("\n");
         }
         printf("\n\n");
@@ -79,8 +75,6 @@ int main(){
     int i, j, n;
     /*printf("Enter the number of vertices: ");
     scanf("%d",&n);
-    //n++;
-
     
     int cost[n][n],A[n][n];
     printf("Enter the cost matrix:\n");
@@ -112,7 +106,6 @@ int main(){
             }*/
         }
     }
-
                 
     cost[1][2] = 8;
     cost[1][3] = 3;
