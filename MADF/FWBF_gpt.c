@@ -53,6 +53,17 @@ int del(){
 }
 //is peek() required or a waste of code and memory ?
 
+int FindAndReplace(int u,int i){
+    int j;
+    for(j = front; j <= rear; j++){
+        if(cqueue_arr[j] == u){
+            cqueue_arr[j+1] = i;
+            return 0;
+        }
+    }
+    return 1;
+}
+
 
 
 void printPaths(int P[MAX][MAX], int i, int j) {
@@ -164,7 +175,9 @@ void BellmanFord(int v, int cost[MAX][MAX], int dist[], int n) {
                     dist[u] = dist[i] + cost[i][u];
                     P[u] = i;
 
-                    insert(u);    insert(i);
+                    if(FindAndReplace(u,i)){
+                        insert(u);    insert(i);
+                    }
                 }
             }
             if (dist[u] == inf)
@@ -172,12 +185,12 @@ void BellmanFord(int v, int cost[MAX][MAX], int dist[], int n) {
             else
                 printf("%2d |", dist[u]);
         }
-        printf("\n");
+        //printf("\n");
+        printf("          ");
 
         while(!isEmpty()){
             u = del();    i = del(); 
-            printf("          ");
-            printf("u = %2d, i = %2d  ", u, i);
+            printf("u=%2d, i=%2d  ", u, i);
         }
         printf("\n");
     }
