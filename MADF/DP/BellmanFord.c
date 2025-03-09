@@ -63,7 +63,6 @@ int FindAndReplace(int u,int i){
     return 1;
 }
 
-
 void printPath(int P[], int v, int j) {
     if (v == j) {
         printf("%d", v);
@@ -81,7 +80,6 @@ void BellmanFord(int v, int cost[MAX][MAX], int dist[], int n) {
         dist[i] = cost[v][i];
         P[i] = v;
     }
-
     printf("  u / i  | 1 | 2 | 3 | 4 | 5 | 6 | 7 |\n");
     printf("dist [1] |");
     for (i = 1; i <= n; i++) {
@@ -99,7 +97,6 @@ void BellmanFord(int v, int cost[MAX][MAX], int dist[], int n) {
                 if (cost[i][u] != inf && dist[i] != inf && dist[u] > dist[i] + cost[i][u]) {
                     dist[u] = dist[i] + cost[i][u];
                     P[u] = i;
-
                     if(FindAndReplace(u,i)){
                         insert(u);    insert(i);
                     }
@@ -136,7 +133,6 @@ int main(){
     int v,n;
     /*printf("Enter the number of vertices: ");
     scanf("%d",&n);
-    //n++;
 
     int cost[n][n],dist[n];
     printf("Enter the cost matrix:\n");
@@ -155,8 +151,7 @@ int main(){
     }*/
     
     //printf("Enter the starting (source) vertex: ");
-    //scanf("%d",&v);
-    
+    //scanf("%d",&v);    
     
     n=7,v=1;
     int dist[n];
@@ -167,7 +162,6 @@ int main(){
             cost[i][j] = (i == j) ? 0 : inf;
         }
     }
-
     
     cost[1][2] = 6;
     cost[1][3] = 5;
