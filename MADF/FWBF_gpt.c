@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 #define MAX 10
-#define inf INT_MAX
+#define inf 999999 //INT_MAX
 
 int cqueue_arr[MAX];
 int rear=-1, front=-1;
@@ -194,9 +194,8 @@ void BellmanFord(int v, int cost[MAX][MAX], int dist[], int n) {
 }
 
 int main() {
-    int i,j;
-
-    int n = 5, cost[MAX][MAX], A[MAX][MAX];
+    int i, j, n, v, cost[MAX][MAX], A[MAX][MAX];
+    n = 5;
     
     for (i = 1; i <= n; i++) {
         for (j = 1; j <= n; j++) {
@@ -227,8 +226,9 @@ int main() {
 
     AllPaths(cost, A, n);
 
-    int v = 1, dist[MAX];
-    n = 7;
+    
+    n = 7, v = 1;
+    int dist[MAX];
 
     for (i = 1; i <= n; i++) {
         dist[i] = inf;
