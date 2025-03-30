@@ -3,127 +3,103 @@
 #include<limits.h>
 #include<stdbool.h>
 #include<time.h>
-#define INF 999999
+#include<windows.h>
+
+#define INF INT_MAX
 #define MAX 20
 int cost[MAX],bcost[MAX];
 
-void Fdisplay(int c[][MAX],int p[],int k,int n){
-    int i,j;
-    for(i=k;i>=1;i--){
-        for(j=n;j>=1;j--){
-            if(c[i][j]!=INF){
-                printf("cost[%d][%d]=%d\n",i,j,cost[j]);
-            }
-        }
-        printf("\n");
-    }
-
-    printf("Path: %d",p[1]);
-    for(i=2;i<=k;i++){
-        printf("-%d",p[i]);
-    }
-    printf("\nCost=%d\n\n",cost[1]);
+long long current_time_us(){
+    LARGE_INTEGER freq, counter;
+    QueryPerformanceFrequency(&freq);
+    QueryPerformanceCounter(&counter);
+    return (counter.QuadPart * 1000000) / freq.QuadPart;
 }
 
-void Bdisplay(int c[][MAX],int p[],int k,int n){
-    int i,j;
-    for(i=1;i<=k;i++){
-        for(j=1;j<=n;j++){
-            if(c[i][j]!=INF){
-                printf("bcost[%d][%d]=%d\n",i,j,bcost[j]);
+void FGraph(int G[MAX][MAX], int k, int n, int p[MAX]){
+    double cost[MAX];
+    int d[MAX], stage[MAX];
+
+    cost[n] = 0.0; stage[n] = k;
+    printf("cost[%02d,%2d] = %.2f\td[%02d,%2d] = %d\n", stage[n], n, cost[n], stage[n], n, d[n]);
+
+    for(int j=n-1; j>=1; j--){
+        double minCost = INT_MAX;
+        int r = -1;
+        int maxStage = 0;
+        for(int v = j+1; v<=n; v++){
+            if(G[j][v]!=0){
+                if(G[j][v] + cost[v] < minCost){
+                    minCost = G[j][v] + cost[v];
+                    r = v;
+                }
+                if(stage[v] > maxStage){
+                    maxStage = stage[v];
+                }
             }
         }
-        printf("\n");
-    }
 
-    printf("Path: %d",p[1]);
-    for(i=2;i<=k;i++){
-        printf("-%d",p[i]);
+        cost[j] = minCost;
+        d[j] = r;
+        stage[j] = maxStage - 1;
+
+        printf("cost[%02d,%2d] = %.2f\td[%02d,%2d] = %d\n", stage[j], j, cost[j], stage[j], j, d[j]);
     }
-    printf("\nCost=%d\n\n",bcost[n]);
+    p[1] = 1; p[k] = n;
+    for(int j = 2; j < k; j++){
+        p[j] = d[p[j-1]];
+    }
 }
 
-void FGraph(int c[MAX][MAX],int k,int n,int p[]){
-    int j,r,min,d[MAX] = {0};//,cost[MAX] = {INF};
+void BGraph(int G[MAX][MAX], int k, int n, int p[MAX]){
+    double bcost[MAX];
+    int d[MAX], stage[MAX];
 
-    cost[n]=0.0;
-    float x=(float)k-(1/(k-1));
-    int stage=k-1;
+    bcost[1] = 0.0; stage[1] = 1;
+    printf("cost[%02d,%2d] = %.2f\td[%02d,%2d] = %d\n", stage[1], 1, bcost[1], stage[1], 1, d[1]);
 
-    for(j=n-1;j>=1;j--){
-        x-=0.25;
-        stage=x;
-        int min = INF;
-        for(r=j;r<=n;r++){
-            if(c[j][r]!=0 && min>c[j][r]+cost[r]){
-                min=c[j][r]+cost[r];
-                d[j]=r;
+    for(int j=2; j<=n; j++){
+        double minCost = INT_MAX;
+        int r = -1;
+        int maxStage = 0;
+
+        for(int v = j-1; v>=1; v--){
+            if(G[v][j]!=0){
+                if(G[v][j] + bcost[v] < minCost){
+                    minCost = G[v][j] + bcost[v];
+                    r = v;
+                }
+                if(stage[v] > maxStage){
+                    maxStage = stage[v];
+                }
             }
         }
-        cost[j]=min;
-        printf("Cost(%02d,%02d)=%02d  ",stage,j,cost[j]);
-        printf("r(%02d,%02d)=%02d\n",stage,j,r);
-    }
-    p[1]=1; p[k]=n;
-    for(j=2;j<=k-1;j++){
-        p[j]=d[p[j-1]];
-    }
-    //Fdisplay(c,p,k,n);
 
-    printf("\nShortest Path: %d",p[1]);
-    for(int i=2;i<=k;i++){
-        printf("->%d",p[i]);
+        bcost[j] = minCost;
+        d[j] = r;
+        stage[j] = maxStage + 1;
+
+        printf("cost[%02d,%2d] = %.2f\td[%02d,%2d] = %d\n", stage[j], j, bcost[j], stage[j], j, d[j]);
     }
-    printf("\nMincost=%d\n\n",cost[1]);
+    p[1] = 1; p[k] = n;
+    for(int j = k-1; j >= 2; j--){
+        p[j] = d[p[j+1]];
+    }
 }
 
-void BGraph(int c[MAX][MAX],int k,int n,int p[]){
-    int i,j,r,min,d[MAX] = {0};//,bcost[MAX] = {INF}
-    
-    bcost[1]=0.0;
-    float x = 1;
-    int stage = 1;
-
-    for(j=2;j<=n;j++){
-        x+=0.25;
-        stage=x;
-        int min = INF;
-        for(r=j;r<=n;r++){
-            if(c[r][j]!=0 && min>c[r][j]+bcost[r]){
-                min=c[r][j]+bcost[r];
-                d[j]=r;
-            }
-        }
-        bcost[j]=min;
-        printf("Cost(%02d,%02d)=%02d  ",stage,j,bcost[j]);
-        printf("r(%02d,%02d)=%02d\n",stage,j,r);
-    }
-    p[1]=1; p[k]=n;
-    for(j=k-1;j>=2;j--){
-        p[j]=d[p[j+1]];
-    }
-    //Bdisplay(c,p,k,n);
-    
-    printf("\nShortest Path: %d",p[1]);
-    for(i=2;i<=k;i++){
-        printf("->%d",p[i]);
-    }
-    printf("\nMincost=%d\n\n",bcost[n]);
-}
-
-void create(int c[][MAX],int *n,int *k){
+void create(int G[][MAX],int n,int k){
     int i,j,w,max_edges,origin,destin;
 
     printf("Enter the number of vertices: ");
     scanf("%d",&n);
-    max_edges=*n*(*n-1);
+    max_edges=n*(n-1);
 
     printf("Enter number of stages:");
     scanf("%d",&k);
 
-    for(i=1;i<=*n;i++){
-        for(j=1;j<=*n;j++){
-            c[i][j]=INF;
+    for(i=1;i<=n;i++){
+        for(j=1;j<=n;j++){
+            G[i][j]=INF;
         }
     }
 
@@ -131,32 +107,32 @@ void create(int c[][MAX],int *n,int *k){
         printf("Enter edge %d ((-1,-1) to quit): ",i);
         scanf("%d%d",&origin,&destin);
         if ((origin == -1) && (destin == -1))   break;
-        if (origin > *n || destin > *n || origin < 1 || destin < 1) {
+        if (origin > n || destin > n || origin < 1 || destin < 1) {
             printf("Invalid edge\n");
             i--;
         } else {
             printf("Enter cost: ");
             scanf("%d", &w);
-            c[origin][destin] = w;
+            G[origin][destin] = w;
         }
     }
 }
 
-int main(){
+int main() {
+    int choice;
+    int p[MAX] = {0};
     int n=14, k=5;
-    int p[k];// = {0};
     int c[MAX][MAX] = {INF};
+  
+    int cost[MAX][MAX] = {0};
+    int G[MAX][MAX] = {0};
 
-    /*for (int i = 0; i < MAX; i++){
-        for (int j = 0; j < MAX; j++){
-            c[i][j] = INF;
-        }
-        cost[i] = INF;
-        bcost[i] = INF;
-    }*/
+    long long t;
+    struct timespec start, end;
+    double time_spent;
 
-    //create(c,&n,&k);
-
+    //createGraph(G);
+    
     c[1][2] = 9;
     c[1][3] = 8;
     c[1][4] = 6;
@@ -190,7 +166,69 @@ int main(){
     c[12][14] = 8;
     c[13][14] = 7;
 
-    FGraph(c,k,n,p);
-    BGraph(c,k,n,p);
+    for (int i = 0; i < MAX; i++) {
+        for (int j = 0; j < MAX; j++) {
+            cost[i][j] = INF;
+        }
+    }
+    for (int i = 0; i < 15; i++) {
+        for (int j = 0; j < 15; j++) {
+            cost[i][j] = c[i][j];
+        }
+    }
+    
+    do
+    {
+        printf("\nMenu\n");
+        printf("1. Forward Graph Algorithm\n");
+        printf("2. Backward Graph Algorithm\n");
+        printf("3. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d",&choice);
+
+        if (choice==1)
+        {            
+            printf("Forward Graph Algorithm:\n");
+            t = current_time_us();
+            timespec_get(&start, TIME_UTC);            
+            FGraph(cost, k, n, p);
+            timespec_get(&end, TIME_UTC);
+            t = current_time_us() - t;
+            //double time_spent = ((end.tv_sec - start.tv_sec) * 1e9 + (end.tv_nsec - start.tv_nsec)) / 1e6; // in microseconds
+            time_spent = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1e9; // in seconds
+
+            printf("\nMinimum cost path: ");
+            printf("%d", p[1]);
+            for(int i = 2; i <= k; i++){
+                printf("->%d", p[i]);
+            }
+
+            printf("\n\nTime taken for forward graph: %lldμs or %lf seconds\n", t,time_spent);
+        }
+        else if(choice==2){
+            printf("\nBackward Graph Algorithm:\n");
+            t = current_time_us();
+            timespec_get(&start, TIME_UTC);
+            BGraph(cost, k, n, p);
+            timespec_get(&end, TIME_UTC);
+            t = current_time_us() - t;
+            //double time_spent = ((end.tv_sec - start.tv_sec) * 1e9 + (end.tv_nsec - start.tv_nsec)) / 1e6; // in microseconds
+            time_spent = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1e9; // in seconds
+
+            printf("\nMinimum cost path: ");
+            printf("%d", p[1]);
+            for(int i = 2; i <= k; i++){
+                printf("->%d", p[i]);
+            }
+
+            printf("\n\nTime taken for backward graph: %lldμs or %lf seconds\n", t,time_spent);
+        }
+        else if(choice==3){
+            continue;
+        }
+        else{
+            printf("Invalid Input");
+        }
+    } while (choice!=3);   
     return 0;
 }
